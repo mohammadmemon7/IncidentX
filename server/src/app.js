@@ -28,9 +28,6 @@ app.use(helmet({
 app.use(morgan('dev'));
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://Mohammad:BRtF5YOnsjhvcDSP@cluster0.e1r9kue.mongodb.net/IncidentX')
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
 
 // Socket.io Setup
 app.set('io', io);
@@ -65,8 +62,5 @@ app.get('/', (req, res) => {
   res.send('Incident X API is running');
 });
 
-// Start Server
-const PORT = process.env.PORT || 10001;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+module.exports = app;

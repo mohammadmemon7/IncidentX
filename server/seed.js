@@ -3,13 +3,14 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const Incident = require('./models/Incident');
+const connectToDb = require('./src/config/database');
+connectToDb();
 
 dotenv.config();
 
 const seedData = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://Mohammad:BRtF5YOnsjhvcDSP@cluster0.e1r9kue.mongodb.net/IncidentX');
-    console.log('Connected to MongoDB for seeding...');
+    await connectToDb();
 
     // Clear existing data
     await User.deleteMany();
