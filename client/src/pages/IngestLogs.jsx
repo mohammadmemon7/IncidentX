@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Terminal, 
   Activity, 
@@ -123,18 +123,20 @@ const IngestLogs = () => {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     fetchLogs();
   }, []);
 
   const handleSimulate = async () => {
     setIsSimulating(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:10000/api'}/ingest`, demoPayload);
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:10001/api'}/ingest`, demoPayload, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
       toast.success('Simulation payload sent!');
       fetchLogs();
     } catch (err) {
-      toast.error('Simulation failed');
+      toast.error('Simulation failed: ' + (err.response?.data?.message || err.message));
     } finally {
       setIsSimulating(false);
     }

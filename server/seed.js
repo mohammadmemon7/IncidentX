@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
-const User = require('./models/User');
-const Incident = require('./models/Incident');
+const User = require('./src/models/User');
+const Incident = require('./src/models/Incident');
 const connectToDb = require('./src/config/database');
 connectToDb();
 

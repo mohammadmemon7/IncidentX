@@ -73,6 +73,7 @@ router.post('/:id/summary', protect, async (req, res) => {
 router.post('/:id/postmortem', protect, async (req, res) => {
   try {
     const incident = await Incident.findById(req.params.id);
+    if (!incident) return res.status(404).json({ message: 'Incident not found' });
     let pm = await Postmortem.findOne({ incident: incident._id });
     if (pm) return res.json(pm);
     const content = await generatePostmortem(incident, incident.updates);
@@ -81,11 +82,75 @@ router.post('/:id/postmortem', protect, async (req, res) => {
   } catch (error) { res.status(500).json({ message: error.message }); }
 });
 
+router.get('/:id/postmortem', protect, async (req, res) => {
+  try {
+    const pm = await Postmortem.findOne({ incident: req.params.id });
+    if (!pm) return res.status(404).json({ message: 'Postmortem not found' });
+    res.json(pm);
+  } catch (error) { res.status(500).json({ message: error.message }); }
+});
+
 router.post('/:id/rootcause', protect, async (req, res) => {
   try {
     const incident = await Incident.findById(req.params.id);
     const suggestions = await suggestRootCause(incident, incident.updates);
     res.json(suggestions);
+  } catch (error) { res.status(500).json({ message: error.message }); }
+});
+
+router.put('/:id', protect, authorize('admin', 'responder'), async (req, res) => {
+  try {
+    const { title, description, service } = req.body;
+    const incident = await Incident.findByIdAndUpdate(
+      req.params.id,
+      { title, description, service },
+      { new: true, runValidators: true }
+    );
+    if (!incident) return res.status(404).json({ message: 'Incident not found' });
+    res.json(incident);
+  } catch (error) { res.status(400).json({ message: error.message }); }
+});
+
+router.post('/:id/responders', protect, authorize('admin'), async (req, res) => {
+  try {
+    const incident = await Incident.findById(req.params.id);
+    if (!incident) return res.status(404).json({ message: 'Incident not found' });
+    
+    const { userId } = req.body;
+    if (incident.responders.some(r => r.user.toString() === userId)) {
+      return res.status(400).json({ message: 'User is already a responder' });
+    }
+    
+    incident.responders.push({ user: userId });
+    await incident.save();
+    
+    req.app.get('io').to(`user:${userId}`).emit('responder:added', { incidentId: incident._id, title: incident.title });
+    res.json(incident);
+  } catch (error) { res.status(400).json({ message: error.message }); }
+});
+
+router.put('/:id/postmortem', protect, authorize('admin', 'responder'), async (req, res) => {
+  try {
+    const { editedContent } = req.body;
+    const pm = await Postmortem.findOneAndUpdate(
+      { incident: req.params.id },
+      { editedContent },
+      { new: true }
+    );
+    if (!pm) return res.status(404).json({ message: 'Postmortem not found' });
+    res.json(pm);
+  } catch (error) { res.status(400).json({ message: error.message }); }
+});
+
+router.delete('/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    const incident = await Incident.findById(req.params.id);
+    if (!incident) return res.status(404).json({ message: 'Incident not found' });
+    
+    await incident.deleteOne();
+    await Postmortem.deleteOne({ incident: req.params.id });
+    
+    res.json({ message: 'Incident and associated postmortem deleted' });
   } catch (error) { res.status(500).json({ message: error.message }); }
 });
 
