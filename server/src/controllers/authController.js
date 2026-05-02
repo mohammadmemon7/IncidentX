@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const {config} = require('../config/config');
 const User = require('../models/User');
 
 const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET || 'supersecretjwtkey_hackathon', { expiresIn: '30d' });
@@ -46,8 +47,40 @@ const getUserProfile = async (req, res) => {
   else res.status(404).json({ message: 'User not found' });
 };
 
+const googleCallback = async (req, res) => {
+    try {
+        const { id, displayName, emails, photos } = req.user;
+
+        const email = emails[0].value;
+        const profilePic = photos[0].value;
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = await User.create({
+                email,
+                name: displayName,
+                googleId: id,
+            });
+        }
+
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        res.cookie('token', token);
+        res.redirect('http://localhost:5173/login');
+
+    } catch (error) {
+        console.error('Google callback error:', error);
+        res.redirect('http://localhost:5173/login?error=auth_failed');
+    }
+};
 module.exports = {
   registerUser,
   loginUser,
-  getUserProfile
+  getUserProfile,
+  googleCallback
 };

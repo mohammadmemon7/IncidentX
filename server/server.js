@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const http = require('http');
-const { app } = require('./src/app');
+const app = require('./src/app');
 const { initSocket } = require('./src/sockets/server.socket'); 
 const connectToDb = require('./src/config/database');
 
