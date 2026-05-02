@@ -8,12 +8,18 @@ const DashboardLayout = () => {
   if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="flex min-h-screen bg-[#020617] relative">
       <Sidebar />
-      <main className="flex-1 ml-64 p-8 transition-all duration-300">
+      <main className="flex-1 ml-64 p-8 transition-all duration-300 relative z-10">
         <Outlet />
       </main>
-      <Toaster position="top-right" toastOptions={{ className: 'dark:bg-slate-800 dark:text-white dark:border-slate-700' }} />
+      <Toaster 
+        position="top-right" 
+        toastOptions={{ 
+          className: 'glass border border-white/10 text-white rounded-2xl p-4 shadow-2xl',
+          duration: 4000
+        }} 
+      />
     </div>
   );
 };
