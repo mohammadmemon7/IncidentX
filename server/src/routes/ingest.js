@@ -7,6 +7,7 @@ const IngestLog = require('../models/IngestLog');
 const IngestKey = require('../models/IngestKey');
 const { analyzeLog } = require('../services/aiService');
 const { protect, authorize } = require('../middleware/auth');
+const { getIO } = require('../sockets/server.socket'); 
 
 const ingestLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
@@ -52,7 +53,7 @@ router.post('/', ingestLimiter, async (req, res) => {
         updates: [{ message: `AI Detected: ${aiDecision.probable_cause}`, isAI: true }]
       });
       incidentId = incident._id;
-      req.app.get('io').to('admin').emit('incident:new', incident);
+      getIO().to('admin').emit('incident:new', incident);
     }
     const log = await IngestLog.create({ service, apiKey, payload: req.body, aiDecision, incidentCreated: incidentId });
     res.status(201).json({ success: true, incidentCreated: !!incidentId, logId: log._id });
