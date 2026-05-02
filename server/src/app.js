@@ -27,7 +27,6 @@ app.use(helmet({
 }));
 app.use(morgan('dev'));
 
-// Database Connection
 
 // Socket.io Setup
 app.set('io', io);
