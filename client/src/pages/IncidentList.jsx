@@ -55,8 +55,8 @@ const IncidentRow = ({ incident }) => (
 
     <div className="flex items-center gap-10 ml-8">
        <div className="hidden lg:flex flex-col items-end gap-1.5">
-          <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Unit Assignee</span>
-          <span className="text-sm font-bold text-white">Security Unit 01</span>
+          <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Affected Service</span>
+          <span className="text-sm font-bold text-white uppercase">{incident.service}</span>
        </div>
        <div className="h-10 w-[1px] bg-white/10 hidden lg:block" />
        <ChevronRight size={24} className="text-slate-600 group-hover:text-white group-hover:translate-x-1 transition-all" />
@@ -70,17 +70,18 @@ const DeclareModal = ({ isOpen, onClose }) => {
     title: '',
     severity: 'medium',
     description: '',
+    service: '',
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.title || !formData.description) return toast.error('Please fill all required protocols.');
+    if (!formData.title || !formData.description || !formData.service) return toast.error('Please fill all required protocols.');
     
     try {
       await createIncident(formData).unwrap();
       toast.success('Incident Declared & Team Mobilized');
       onClose();
-      setFormData({ title: '', severity: 'medium', description: '' });
+      setFormData({ title: '', severity: 'medium', description: '', service: '' });
     } catch (err) {
       toast.error('Protocol Failure: ' + (err.data?.message || 'Check connection'));
     }
@@ -107,15 +108,26 @@ const DeclareModal = ({ isOpen, onClose }) => {
 
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
            <div className="space-y-6">
-              <div className="space-y-2">
-                 <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Incident Hash Title</label>
-                 <input 
-                   autoFocus
-                   placeholder="e.g. Core Database Latency Spike"
-                   className="w-full bg-white/[0.03] border border-white/10 text-white h-12 px-5 rounded-xl focus:ring-2 focus:ring-primary-500/30 outline-none transition-all text-base font-medium placeholder:text-slate-700"
-                   value={formData.title}
-                   onChange={(e) => setFormData({...formData, title: e.target.value})}
-                 />
+              <div className="grid grid-cols-2 gap-4">
+                 <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Incident Hash Title</label>
+                    <input 
+                      autoFocus
+                      placeholder="e.g. Core Latency Spike"
+                      className="w-full bg-white/[0.03] border border-white/10 text-white h-12 px-5 rounded-xl focus:ring-2 focus:ring-primary-500/30 outline-none transition-all text-sm font-medium placeholder:text-slate-700"
+                      value={formData.title}
+                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Affected Service</label>
+                    <input 
+                      placeholder="e.g. payment-gateway"
+                      className="w-full bg-white/[0.03] border border-white/10 text-white h-12 px-5 rounded-xl focus:ring-2 focus:ring-primary-500/30 outline-none transition-all text-sm font-medium placeholder:text-slate-700"
+                      value={formData.service}
+                      onChange={(e) => setFormData({...formData, service: e.target.value})}
+                    />
+                 </div>
               </div>
 
               <div className="space-y-2">
