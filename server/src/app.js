@@ -10,6 +10,7 @@ const incidentRoutes = require('./routes/incidents');
 const userRoutes = require('./routes/users');
 const ingestRoutes = require('./routes/ingest');
 const statusRoutes = require('./routes/status');
+const config = require('./config/config');
 
 const app = express();
 
@@ -21,9 +22,10 @@ app.use(morgan('dev'));
 app.use(passport.initialize());
 
 passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: 'http://localhost:3000/api/auth/google/callback',
+  clientID: config.GOOGLE_CLIENT_ID,
+  clientSecret: config.GOOGLE_CLIENT_SECRET,
+  callbackURL: config.GOOGLE_CALLBACK_URL,
+  proxy: true,
 }, (accessToken, refreshToken, profile, done) => {
   return done(null, profile);
 }));

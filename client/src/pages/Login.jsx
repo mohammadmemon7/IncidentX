@@ -157,8 +157,8 @@ const Login = () => {
           <div className="space-y-6 pt-4">
             <div className="grid grid-cols-1 gap-3">
                <button 
-                  onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`}
-                  className="flex items-center justify-center gap-3 h-12 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/10 transition-all text-sm font-bold text-white tracking-tight"
+                  onClick={() => window.location.href = `${import.meta.env.VITE_API_URL || ''}/api/auth/google`.replace('/api/api', '/api')}
+                  className="flex items-center justify-center gap-3 h-12 rounded-lg border border-white/10 bg-white/3 hover:bg-white/10 transition-all text-sm font-bold text-white tracking-tight"
                >
                   <svg width="18" height="18" viewBox="0 0 18 18">
                     <path d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.49h4.84c-.21 1.12-.84 2.07-1.79 2.7l2.86 2.22c1.67-1.54 2.63-3.81 2.63-6.57z" fill="#4285F4"/>

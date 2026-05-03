@@ -10,7 +10,7 @@ const useSocket = (incidentId = null) => {
   const { user: currentUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:10000', {
+    const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000', {
       withCredentials: true,
     });
 

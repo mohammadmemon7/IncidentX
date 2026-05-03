@@ -119,7 +119,7 @@ const IngestLogs = () => {
 
   const fetchLogs = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:10001/api'}/ingest/logs`, {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/ingest/logs`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setLogs(res.data);
@@ -135,7 +135,7 @@ const IngestLogs = () => {
   const handleSimulate = async () => {
     setIsSimulating(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:10001/api'}/ingest`, demoPayload, {
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/ingest`, demoPayload, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       toast.success('Simulation payload sent!');
