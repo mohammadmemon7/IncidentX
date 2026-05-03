@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { getIO } = require('../sockets/server.socket');
 
 // @desc    Get all users
 // @route   GET /api/users
@@ -17,6 +18,7 @@ const updateUser = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
     user.role = req.body.role || user.role;
     await user.save();
+    try { getIO().emit('user:roleUpdated', { userId: user._id, role: user.role }); } catch (e) {}
     res.json(user);
   } catch (error) {
     console.error("DEBUG: User Update Error:", error);
@@ -33,6 +35,7 @@ const deleteUser = async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
     await User.findByIdAndDelete(req.params.id);
+    try { getIO().emit('user:deleted', req.params.id); } catch (e) {}
     res.json({ message: 'User removed' });
   } catch (error) {
     if (error.name === 'CastError') return res.status(400).json({ message: 'Invalid User ID' });

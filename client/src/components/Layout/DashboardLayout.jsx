@@ -2,8 +2,10 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Sidebar from './Sidebar';
 import { Toaster } from 'react-hot-toast';
+import useSocket from '../../hooks/useSocket';
 
 const DashboardLayout = () => {
+  useSocket();
   const { user } = useSelector((state) => state.auth);
   if (!user) return <Navigate to="/login" replace />;
 

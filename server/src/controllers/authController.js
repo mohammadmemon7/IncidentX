@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const {config} = require('../config/config');
 const User = require('../models/User');
+const { getIO } = require('../sockets/server.socket');
 
 const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET || 'supersecretjwtkey_hackathon', { expiresIn: '30d' });
 
@@ -15,6 +16,7 @@ const registerUser = async (req, res) => {
   try {
     if (await User.findOne({ email })) return res.status(400).json({ message: 'User already exists' });
     const user = await User.create({ name, email, password, role: 'viewer' });
+    try { getIO().to('admin').emit('user:new', user); } catch (e) {}
     res.status(201).json({ _id: user._id, name: user.name, email: user.email, role: user.role, token: generateToken(user._id) });
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
@@ -69,9 +71,16 @@ const googleCallback = async (req, res) => {
         const profilePic = photos[0].value;
 
         let user = await User.findOne({ email });
-
+        
         if (!user) {
-            return res.redirect(`http://localhost:5173/login?error=${encodeURIComponent('No account found with this email. Please register first.')}`);
+          user = await User.create({
+            name: displayName,
+            email: email,
+            googleId: id,
+            avatar: profilePic,
+            role: 'viewer'
+          });
+          try { getIO().to('admin').emit('user:new', user); } catch (e) {}
         }
 
         const token = jwt.sign(

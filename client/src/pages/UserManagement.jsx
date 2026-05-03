@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import useSocket from '../hooks/useSocket';
 
 const RoleSelector = ({ currentRole, onRoleChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -86,6 +87,7 @@ const RoleSelector = ({ currentRole, onRoleChange }) => {
 };
 
 const UserManagement = () => {
+  useSocket();
   const [searchTerm, setSearchTerm] = useState('');
   const { data: users, isLoading } = useGetUsersQuery();
   const [updateRole] = useUpdateUserRoleMutation();
@@ -150,7 +152,7 @@ const UserManagement = () => {
       </div>
 
       {/* User Table: Redesigned for Premium Theme */}
-      <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="bg-white/[0.02] border border-white/5 rounded-2xl shadow-2xl overflow-visible">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-white/[0.03] border-b border-white/10">
@@ -180,7 +182,7 @@ const UserManagement = () => {
                     </div>
                   </div>
                 </td>
-                <td className="px-8 py-6">
+                <td className={`px-8 py-6 ${u.role === 'admin' ? 'z-50' : 'z-40'} relative`}>
                   <RoleSelector 
                     currentRole={u.role} 
                     onRoleChange={(newRole) => handleRoleChange(u._id, newRole)} 
