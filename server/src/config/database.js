@@ -6,7 +6,7 @@ const config = require('./config');
  */
 const connectToDb = async () => {
     await mongoose.connect(config.MONGO_URI);
-    console.log("Database connected succesfully");
+    console.log("Database connected successfully");
     
 };
 

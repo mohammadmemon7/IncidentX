@@ -10,6 +10,7 @@ const incidentRoutes = require('./routes/incidents');
 const userRoutes = require('./routes/users');
 const ingestRoutes = require('./routes/ingest');
 const statusRoutes = require('./routes/status');
+const monitorRoutes = require('./routes/monitors');
 const config = require('./config/config');
 
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/incidents', incidentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/ingest', ingestRoutes);
 app.use('/api/status', statusRoutes);
+app.use('/api/monitors', monitorRoutes);
 
 
 app.get('/', (req, res) => {

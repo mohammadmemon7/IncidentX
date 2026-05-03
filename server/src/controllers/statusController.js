@@ -1,4 +1,5 @@
 const Incident = require('../models/Incident');
+const Monitor = require('../models/Monitor');
 
 /**
  * 
@@ -10,10 +11,21 @@ const getPublicStatus = async (req, res) => {
   try {
     const active = await Incident.find({ status: { $ne: 'resolved' } }).sort({ createdAt: -1 });
     const history = await Incident.find({ status: 'resolved', resolvedAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } }).sort({ resolvedAt: -1 });
+    const monitors = await Monitor.find();
+
     let overallStatus = 'operational';
-    if (active.some(i => i.severity === 'critical')) overallStatus = 'major-outage';
-    else if (active.length > 0) overallStatus = 'degraded';
-    res.json({ overallStatus, activeIncidents: active, resolvedHistory: history });
+    if (active.some(i => i.severity === 'critical') || monitors.some(m => m.status === 'down')) {
+      overallStatus = 'major-outage';
+    } else if (active.length > 0) {
+      overallStatus = 'degraded';
+    }
+
+    res.json({ 
+      overallStatus, 
+      activeIncidents: active, 
+      resolvedHistory: history,
+      monitors: monitors.map(m => ({ name: m.name, status: m.status }))
+    });
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 

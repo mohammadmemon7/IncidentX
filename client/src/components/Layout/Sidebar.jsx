@@ -18,6 +18,7 @@ const Sidebar = () => {
   const navItems = [
     { name: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/dashboard' },
     { name: 'Incidents', icon: <AlertCircle size={18} />, path: '/incidents' },
+    { name: 'Monitors', icon: <Activity size={18} />, path: '/monitors' },
     { name: 'Status Page', icon: <Activity size={18} />, path: '/status' },
   ];
 

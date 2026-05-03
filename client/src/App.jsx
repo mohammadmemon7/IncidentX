@@ -13,6 +13,7 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Docs from './pages/Docs';
 import ForgotPassword from './pages/ForgotPassword';
+import MonitorList from './pages/MonitorList';
 import { useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
@@ -46,6 +47,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/incidents" element={<IncidentList />} />
           <Route path="/incidents/:id" element={<IncidentDetail />} />
+          <Route path="/monitors" element={<MonitorList />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/ingest" element={<IngestLogs />} />
         </Route>

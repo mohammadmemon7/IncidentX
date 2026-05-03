@@ -75,6 +75,15 @@ const useSocket = (incidentId = null) => {
       }
     });
 
+    socket.on('monitor:status', (monitor) => {
+      dispatch(apiSlice.util.invalidateTags(['Monitor']));
+      if (monitor.status === 'down') {
+        toast.error(`MONITOR DOWN: ${monitor.name} (${monitor.url})`, { icon: '📉' });
+      } else {
+        toast.success(`Monitor Up: ${monitor.name}`, { icon: '📈' });
+      }
+    });
+
     return () => {
       socket.disconnect();
     };

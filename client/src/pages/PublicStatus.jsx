@@ -132,6 +132,7 @@ const PublicStatus = () => {
     
     socket.on('incident:new', () => fetchStatus());
     socket.on('incident:listUpdate', () => fetchStatus());
+    socket.on('monitor:status', () => fetchStatus());
 
     return () => socket.disconnect();
   }, []);
@@ -241,12 +242,18 @@ const PublicStatus = () => {
               <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Live Updates Available</span>
            </div>
            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <ServiceStatus name="Global API Gateway" status={overallStatus === 'major-outage' ? 'degraded' : 'operational'} uptime="99.99" />
-              <ServiceStatus name="Authentication Engine" status="operational" uptime="100.00" />
-              <ServiceStatus name="Distributed DB (US-EAST)" status="operational" uptime="99.95" />
-              <ServiceStatus name="Global Edge CDN" status="operational" uptime="99.99" />
-              <ServiceStatus name="Core Incident Logic" status="operational" uptime="100.00" />
-              <ServiceStatus name="Public Dashboard" status="operational" uptime="99.98" />
+              {statusData?.monitors?.length > 0 ? (
+                statusData.monitors.map((m, i) => (
+                  <ServiceStatus key={i} name={m.name} status={m.status === 'up' ? 'operational' : 'outage'} uptime="99.9" />
+                ))
+              ) : (
+                <>
+                  <ServiceStatus name="Global API Gateway" status={overallStatus === 'major-outage' ? 'degraded' : 'operational'} uptime="99.99" />
+                  <ServiceStatus name="Authentication Engine" status="operational" uptime="100.00" />
+                  <ServiceStatus name="Distributed DB" status="operational" uptime="99.95" />
+                  <ServiceStatus name="Public Dashboard" status="operational" uptime="99.98" />
+                </>
+              )}
            </div>
         </div>
 
