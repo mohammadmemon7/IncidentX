@@ -29,10 +29,24 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (user && (await user.comparePassword(password))) {
+    
+    if (!user) {
+      return res.status(401).json({ message: 'Email not registered' });
+    }
+
+    if (!user.password && user.googleId) {
+      return res.status(401).json({ message: 'This account is registered via Google. Please use Google Login.' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (isMatch) {
       res.json({ _id: user._id, name: user.name, email: user.email, role: user.role, token: generateToken(user._id) });
-    } else res.status(401).json({ message: 'Invalid email or password' });
-  } catch (error) { res.status(500).json({ message: error.message }); }
+    } else {
+      res.status(401).json({ message: 'Invalid email or password' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 /**
@@ -57,11 +71,7 @@ const googleCallback = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (!user) {
-            user = await User.create({
-                email,
-                name: displayName,
-                googleId: id,
-            });
+            return res.redirect(`http://localhost:5173/login?error=${encodeURIComponent('No account found with this email. Please register first.')}`);
         }
 
         const token = jwt.sign(
@@ -70,12 +80,20 @@ const googleCallback = async (req, res) => {
             { expiresIn: "7d" }
         );
 
-        res.cookie('token', token);
-        res.redirect('http://localhost:5173/login');
+        const userData = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role || 'viewer',
+          token
+        };
+
+        const encodedUser = encodeURIComponent(JSON.stringify(userData));
+        res.redirect(`http://localhost:5173/login?auth_success=true&user=${encodedUser}`);
 
     } catch (error) {
         console.error('Google callback error:', error);
-        res.redirect('http://localhost:5173/login?error=auth_failed');
+        res.redirect(`http://localhost:5173/login?error=${encodeURIComponent(error.message)}`);
     }
 };
 module.exports = {

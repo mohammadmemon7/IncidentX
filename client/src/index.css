@@ -69,7 +69,7 @@
   @apply bg-slate-800 rounded-full hover:bg-slate-700;
 }
 
-
+/* Custom Textures */
 
 @keyframes float {
   0% { transform: translateY(0px); }

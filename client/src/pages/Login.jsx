@@ -15,14 +15,34 @@ const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
   const { user } = useSelector((state) => state.auth);
 
-  useEffect(() => { if (user) navigate('/dashboard'); }, [navigate, user]);
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authSuccess = urlParams.get('auth_success');
+    const userData = urlParams.get('user');
+    const error = urlParams.get('error');
+
+    if (authSuccess && userData) {
+      try {
+        const user = JSON.parse(decodeURIComponent(userData));
+        dispatch(setCredentials(user));
+        navigate('/dashboard');
+      } catch (err) {
+        toast.error('Failed to parse user data');
+      }
+    }
+
+    if (error) {
+      toast.error(error);
+    }
+
+    if (user) navigate('/dashboard');
+  }, [navigate, user, dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
-      toast.success('Welcome back');
       navigate('/dashboard');
     } catch (err) { toast.error(err?.data?.message || 'Login failed'); }
   };
@@ -119,18 +139,19 @@ const Login = () => {
           </form>
 
           <div className="space-y-6 pt-4">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5"></div></div>
-              <div className="relative flex justify-center text-xs font-black uppercase tracking-[0.2em]"><span className="bg-[#020617] px-4 text-slate-600">Enterprise Access</span></div>
-            </div>
- 
-            <div className="grid grid-cols-2 gap-3">
-               <button className="flex items-center justify-center gap-2 h-10 rounded-lg border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-all text-xs font-black text-slate-500 uppercase tracking-widest">
-                  <Globe size={14} /> SSO Login
+            <div className="grid grid-cols-1 gap-3">
+               <button 
+                  onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`}
+                  className="flex items-center justify-center gap-3 h-12 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/10 transition-all text-sm font-bold text-white tracking-tight"
+               >
+                  <svg width="18" height="18" viewBox="0 0 18 18">
+                    <path d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.49h4.84c-.21 1.12-.84 2.07-1.79 2.7l2.86 2.22c1.67-1.54 2.63-3.81 2.63-6.57z" fill="#4285F4"/>
+                    <path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.86-2.22c-.8.53-1.82.85-3.1.85-2.39 0-4.41-1.61-5.14-3.77L.95 13.34C2.43 16.27 5.48 18 9 18z" fill="#34A853"/>
+                    <path d="M3.86 10.68c-.19-.53-.3-1.1-.3-1.68s.11-1.15.3-1.68L.95 4.66C.34 5.87 0 7.24 0 9s.34 3.13.95 4.34l2.91-2.66z" fill="#FBBC05"/>
+                    <path d="M9 3.58c1.32 0 2.5.45 3.44 1.35L15 2.47C13.47.93 11.43 0 9 0 5.48 0 2.43 1.73.95 4.66l2.91 2.66C4.59 5.19 6.61 3.58 9 3.58z" fill="#EA4335"/>
+                  </svg>
+                  Continue with Google
                </button>
-               <Link to="/status" className="flex items-center justify-center gap-2 h-10 rounded-lg border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-all text-xs font-black text-slate-500 uppercase tracking-widest">
-                  <Activity size={14} className="text-green-500" /> Status Page
-               </Link>
             </div>
 
             <p className="text-center text-slate-500 text-sm font-medium">

@@ -23,7 +23,6 @@ const Signup = () => {
     try {
       const res = await register({ name, email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
-      toast.success('Welcome to IncidentX');
       navigate('/dashboard');
     } catch (err) { toast.error(err?.data?.message || 'Registration failed'); }
   };

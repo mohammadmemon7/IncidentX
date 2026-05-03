@@ -14,12 +14,20 @@ import Terms from './pages/Terms';
 import Docs from './pages/Docs';
 import ForgotPassword from './pages/ForgotPassword';
 import { useSelector } from 'react-redux';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { user } = useSelector((state) => state.auth);
 
   return (
     <Router>
+      <Toaster 
+        position="top-center" 
+        reverseOrder={false} 
+        toastOptions={{
+          duration: 3000,
+        }}
+      />
       <Routes>
         {/* Public Marketing Page */}
         <Route path="/" element={<Landing />} />

@@ -18,11 +18,6 @@ const Navbar = () => {
           <span className="text-xl font-bold text-white tracking-tight italic">IncidentX</span>
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-10">
-          <Link to="/docs" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Documentation</Link>
-          <Link to="/status" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Status Page</Link>
-        </div>
 
         {/* Auth Links */}
         <div className="hidden md:flex items-center gap-6">
@@ -45,8 +40,6 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-[#020617] border-b border-white/5 p-6 flex flex-col gap-6 animate-in slide-in-from-top duration-300">
-          <Link to="/docs" className="text-lg font-medium text-slate-400" onClick={() => setIsOpen(false)}>Documentation</Link>
-          <Link to="/status" className="text-lg font-medium text-slate-400" onClick={() => setIsOpen(false)}>Status Page</Link>
           <hr className="border-white/5" />
           <Link to="/login" className="text-lg font-bold text-white" onClick={() => setIsOpen(false)}>Sign In</Link>
           <Link to="/signup" className="btn btn-primary w-full py-4 text-lg" onClick={() => setIsOpen(false)}>Get Started</Link>
