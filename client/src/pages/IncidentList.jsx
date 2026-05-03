@@ -19,6 +19,7 @@ import {
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
+import useSocket from '../hooks/useSocket';
 
 const IncidentRow = ({ incident }) => (
   <Link
@@ -189,6 +190,7 @@ const DeclareModal = ({ isOpen, onClose }) => {
 };
 
 const IncidentList = () => {
+  useSocket();
   const { data: incidents, isLoading } = useGetIncidentsQuery();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');

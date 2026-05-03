@@ -49,6 +49,10 @@ const useSocket = (incidentId = null) => {
         toast(`Incident status changed to ${status}`, { icon: '🔄' });
       }
     });
+
+    socket.on('incident:listUpdate', () => {
+      dispatch(apiSlice.util.invalidateTags(['Incident']));
+    });
     
     socket.on('user:new', (newUser) => {
       dispatch(apiSlice.util.invalidateTags(['User']));

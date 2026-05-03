@@ -31,6 +31,11 @@ passport.use(new GoogleStrategy({
 }));
 
 // Routes
+app.get('/auth/google/callback', passport.authenticate('google', {
+  session: false,
+  failureRedirect: 'http://localhost:5173/login',
+}), require('./controllers/authController').googleCallback);
+
 app.use('/api/auth', authRoutes);
 app.use('/api/incidents', incidentRoutes);
 app.use('/api/users', userRoutes);
