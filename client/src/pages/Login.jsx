@@ -3,13 +3,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLoginMutation } from '../store/slices/authApiSlice';
 import { setCredentials } from '../store/slices/authSlice';
-import { ShieldCheck, ArrowRight, Loader2, Globe, Activity } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Loader2, Globe, Activity, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import loginBg from '../assets/login-bg.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
@@ -33,6 +34,12 @@ const Login = () => {
 
     if (error) {
       toast.error(error);
+    }
+
+    // Clear URL parameters to prevent duplicate toasts on re-renders
+    if (authSuccess || error) {
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
     }
 
     if (user) navigate('/dashboard');
@@ -116,14 +123,23 @@ const Login = () => {
                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Password</label>
                    <Link to="/forgot-password" size="sm" className="text-xs font-black text-primary-500 hover:text-white transition-colors uppercase tracking-widest">Forgot password?</Link>
                 </div>
-                <input 
-                  type="password" 
-                  className="w-full bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-700 h-12 px-5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium text-sm" 
-                  placeholder="••••••••" 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  required 
-                />
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    className="w-full bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-700 h-12 px-5 pr-12 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium text-sm" 
+                    placeholder="••••••••" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    required 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
             </div>
 

@@ -196,12 +196,19 @@ const IncidentList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for newest first
 
   const filteredIncidents = incidents?.filter(i => {
     const matchesSearch = i.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = activeFilter === 'all' || i.status === activeFilter;
     return matchesSearch && matchesFilter;
   }) || [];
+
+  const sortedIncidents = [...filteredIncidents].sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
+    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
 
   return (
     <div className="p-8 space-y-12 max-w-7xl mx-auto pb-24">
@@ -249,8 +256,12 @@ const IncidentList = () => {
             </button>
           ))}
           <div className="w-[1px] h-8 bg-white/10 mx-3" />
-          <button className="h-10 px-5 rounded-lg bg-white/5 text-slate-400 hover:text-white transition-all">
-            <ArrowUpDown size={18} />
+          <button 
+            onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+            className={`h-10 px-5 rounded-lg transition-all ${sortOrder === 'asc' ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20' : 'bg-white/5 text-slate-400 hover:text-white'}`}
+            title={sortOrder === 'desc' ? "Newest First" : "Oldest First"}
+          >
+            <ArrowUpDown size={18} className={sortOrder === 'asc' ? 'rotate-180 transition-transform' : 'transition-transform'} />
           </button>
         </div>
       </div>
@@ -263,9 +274,9 @@ const IncidentList = () => {
                <div key={i} className="h-28 rounded-xl bg-white/[0.02] border border-white/5 animate-pulse" />
              ))}
           </div>
-        ) : filteredIncidents.length > 0 ? (
+        ) : sortedIncidents.length > 0 ? (
           <div className="grid gap-4">
-            {filteredIncidents.map(incident => (
+            {sortedIncidents.map(incident => (
               <IncidentRow key={incident._id} incident={incident} />
             ))}
           </div>

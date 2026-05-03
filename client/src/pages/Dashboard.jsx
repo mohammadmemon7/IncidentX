@@ -15,6 +15,7 @@ import {
 import { useGetIncidentsQuery } from '../store/slices/incidentsApiSlice';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import toast from 'react-hot-toast';
 
 const StatCard = ({ title, value, change, icon: Icon, color }) => (
   <div className="bg-slate-900/40 border border-white/5 p-6 rounded-xl relative overflow-hidden group hover:bg-slate-900/60 transition-all">
@@ -183,10 +184,15 @@ const Dashboard = () => {
               </div>
            </div>
 
-           <div className="p-6 rounded-lg border border-dashed border-white/10 bg-white/[0.01] text-center">
+            <div className="p-6 rounded-lg border border-dashed border-white/10 bg-white/[0.01] text-center">
               <p className="text-xs font-bold text-slate-500 mb-3">Operational assistance required?</p>
-              <button className="text-sm font-bold text-white hover:text-primary-400 transition-colors underline underline-offset-4">Access Knowledge Base</button>
-           </div>
+              <button 
+                onClick={() => toast.success('Knowledge Base Protocol is being synchronized. Available in v2.5.0 update.', { icon: '📚' })}
+                className="text-sm font-bold text-white hover:text-primary-400 transition-colors underline underline-offset-4"
+              >
+                Access Knowledge Base
+              </button>
+            </div>
         </div>
       </div>
     </div>
