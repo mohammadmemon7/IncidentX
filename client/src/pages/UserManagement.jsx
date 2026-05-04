@@ -153,7 +153,8 @@ const UserManagement = () => {
 
       {/* User Table: Redesigned for Premium Theme */}
       <div className="bg-white/[0.02] border border-white/5 rounded-2xl shadow-2xl overflow-visible">
-        <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-white/10">
+          <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="bg-white/[0.03] border-b border-white/10">
               <th className="px-8 py-5 text-xs font-black uppercase tracking-widest text-slate-500">Unit Identification</th>
@@ -204,6 +205,7 @@ const UserManagement = () => {
             ))}
           </tbody>
         </table>
+      </div>
 
         {filteredUsers?.length === 0 && !isLoading && (
           <div className="py-24 text-center space-y-4">

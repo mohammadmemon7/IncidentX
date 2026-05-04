@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 const Terms = () => {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-300 font-sans pb-24 selection:bg-primary-500/30">
-      <nav className="h-20 border-b border-white/5 flex items-center justify-between px-8 bg-[#020617]/80 backdrop-blur-md sticky top-0 z-50">
-        <Link to="/" className="flex items-center gap-3 text-white font-bold text-xl tracking-tighter italic">
-          <ShieldCheck className="text-primary-500" size={24} />
+      <nav className="h-20 border-b border-white/5 flex items-center justify-between px-4 md:px-8 bg-[#020617]/80 backdrop-blur-md sticky top-0 z-50">
+        <Link to="/" className="flex items-center gap-3 text-white font-bold text-lg md:text-xl tracking-tighter italic">
+          <ShieldCheck className="text-primary-500" size={20} />
           IncidentX
         </Link>
-        <Link to="/" className="text-xs font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
+        <Link to="/" className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
            <ChevronLeft size={16} /> Back to Home
         </Link>
       </nav>

@@ -23,43 +23,43 @@ import toast from 'react-hot-toast';
 const IncidentRow = ({ incident }) => (
   <Link 
     to={`/incidents/${incident._id}`} 
-    className="group flex items-center justify-between p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:border-primary-500/30 hover:bg-white/[0.04] transition-all"
+    className="group flex flex-col sm:flex-row sm:items-center justify-between p-5 md:p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:border-primary-500/30 hover:bg-white/[0.04] transition-all gap-4"
   >
-    <div className="flex items-center gap-6 flex-1 min-w-0">
-      <div className={`shrink-0 w-14 h-14 rounded-lg flex items-center justify-center ${
+    <div className="flex items-center gap-4 md:gap-6 flex-1 min-w-0">
+      <div className={`shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center ${
         incident.status === 'resolved' ? 'bg-green-500/10 text-green-500' : 
         incident.status === 'investigating' ? 'bg-primary-500/10 text-primary-500' : 'bg-red-500/10 text-red-500'
       }`}>
-        <ShieldAlert size={28} />
+        <ShieldAlert size={24} className="md:w-7 md:h-7" />
       </div>
-
-      <div className="flex-1 min-w-0 space-y-1.5">
-        <div className="flex items-center gap-4">
-          <h3 className="text-base font-bold text-white truncate group-hover:text-primary-400 transition-colors">
+ 
+      <div className="flex-1 min-w-0 space-y-1">
+        <div className="flex flex-wrap items-center gap-2 md:gap-4">
+          <h3 className="text-sm md:text-base font-bold text-white truncate group-hover:text-primary-400 transition-colors">
             {incident.title}
           </h3>
-          <span className={`text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
+          <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${
             incident.severity === 'critical' ? 'border-red-500/20 text-red-400 bg-red-500/5' : 
             incident.severity === 'high' ? 'border-orange-500/20 text-orange-400 bg-orange-500/5' : 'border-blue-500/20 text-blue-400 bg-blue-500/5'
           }`}>
             {incident.severity}
           </span>
         </div>
-        <div className="flex items-center gap-5 text-xs font-bold text-slate-400 uppercase tracking-widest">
-           <span className="flex items-center gap-2"><Clock size={14} /> {formatDistanceToNow(new Date(incident.createdAt))} ago</span>
-           <span className="w-1.5 h-1.5 rounded-full bg-slate-800" />
-           <span className="flex items-center gap-2"><Activity size={14} /> {incident.status}</span>
+        <div className="flex flex-wrap items-center gap-3 md:gap-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+           <span className="flex items-center gap-1.5"><Clock size={12} /> {formatDistanceToNow(new Date(incident.createdAt))} ago</span>
+           <span className="hidden xs:block w-1 h-1 rounded-full bg-slate-800" />
+           <span className="flex items-center gap-1.5"><Activity size={12} /> {incident.status}</span>
         </div>
       </div>
     </div>
-
-    <div className="flex items-center gap-10 ml-8">
-       <div className="hidden lg:flex flex-col items-end gap-1.5">
-          <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Affected Service</span>
-          <span className="text-sm font-bold text-white uppercase">{incident.service}</span>
+ 
+    <div className="flex items-center justify-between sm:justify-end gap-6 md:gap-10 sm:ml-8 border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0">
+       <div className="flex flex-col sm:items-end gap-1">
+          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Service</span>
+          <span className="text-xs md:text-sm font-bold text-white uppercase">{incident.service}</span>
        </div>
-       <div className="h-10 w-[1px] bg-white/10 hidden lg:block" />
-       <ChevronRight size={24} className="text-slate-600 group-hover:text-white group-hover:translate-x-1 transition-all" />
+       <div className="h-8 w-[1px] bg-white/10 hidden lg:block" />
+       <ChevronRight size={20} className="text-slate-600 group-hover:text-white group-hover:translate-x-1 transition-all" />
     </div>
   </Link>
 );

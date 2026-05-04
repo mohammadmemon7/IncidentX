@@ -11,7 +11,9 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/authSlice';
 
-const Sidebar = () => {
+import { X } from 'lucide-react';
+
+const Sidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
@@ -29,14 +31,23 @@ const Sidebar = () => {
   }
 
   return (
-    <aside className="w-64 h-screen fixed left-0 top-0 z-40 border-r border-white/5 bg-[#0b1120] flex flex-col">
-      <div className="p-6">
+    <aside className={`
+      w-64 h-screen fixed left-0 top-0 z-[50] border-r border-white/5 bg-[#0b1120] flex flex-col transition-transform duration-300
+      ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    `}>
+      <div className="p-6 flex items-center justify-between">
         <div className="flex items-center gap-3 text-white font-bold text-xl tracking-tighter">
           <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
             <ShieldCheck size={18} className="text-white" />
           </div>
           <span className="italic">IncidentX</span>
         </div>
+        <button 
+          onClick={onClose}
+          className="lg:hidden p-2 text-slate-500 hover:text-white transition-colors"
+        >
+          <X size={20} />
+        </button>
       </div>
 
       <nav className="flex-1 px-4 py-4 space-y-1">

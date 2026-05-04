@@ -64,7 +64,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col lg:flex-row bg-[#020617] font-sans overflow-hidden">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-[#020617] font-sans">
       {/* Left: Premium Visuals */}
       <div className="lg:w-1/2 relative hidden lg:flex flex-col justify-between p-12 overflow-hidden border-r border-white/5">
         <div 
