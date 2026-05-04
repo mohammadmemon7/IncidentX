@@ -247,12 +247,10 @@ const PublicStatus = () => {
                   <ServiceStatus key={i} name={m.name} status={m.status === 'up' ? 'operational' : 'outage'} uptime="99.9" />
                 ))
               ) : (
-                <>
-                  <ServiceStatus name="Global API Gateway" status={overallStatus === 'major-outage' ? 'degraded' : 'operational'} uptime="99.99" />
-                  <ServiceStatus name="Authentication Engine" status="operational" uptime="100.00" />
-                  <ServiceStatus name="Distributed DB" status="operational" uptime="99.95" />
-                  <ServiceStatus name="Public Dashboard" status="operational" uptime="99.98" />
-                </>
+                <div className="col-span-full py-16 rounded-xl border border-dashed border-white/10 bg-white/[0.01] text-center">
+                  <Activity size={40} className="text-slate-700 mx-auto mb-4" />
+                  <p className="text-slate-500 font-medium italic">No public infrastructure monitors have been registered in the protocol.</p>
+                </div>
               )}
            </div>
         </div>
