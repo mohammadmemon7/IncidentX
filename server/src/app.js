@@ -16,8 +16,21 @@ const config = require('./config/config');
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://incidentx-g0o7.onrender.com"
+    ],
+    credentials: true
+  })
+);
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: false,
+  })
+);
 app.use(morgan('dev'));
 app.use(express.static('./public'));
 
@@ -45,4 +58,4 @@ app.get('/', (req, res) => {
   res.send('Incident X API is running');
 });
 
-module.exports =  app ;
+module.exports = app;
