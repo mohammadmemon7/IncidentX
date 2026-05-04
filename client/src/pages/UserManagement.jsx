@@ -155,10 +155,56 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* User Table: Redesigned for Premium Theme */}
-      <div className="bg-white/[0.02] border border-white/5 rounded-2xl shadow-2xl overflow-visible">
-        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-white/10">
-          <table className="w-full text-left border-collapse min-w-[700px]">
+      {/* User List: Responsive Table for Desktop, Cards for Mobile */}
+      <div className="space-y-4">
+        {/* Mobile Card View */}
+        <div className="grid grid-cols-1 gap-4 lg:hidden">
+          {isLoading ? (
+            [...Array(3)].map((_, i) => (
+              <div key={i} className="h-48 rounded-2xl bg-white/[0.02] border border-white/5 animate-pulse" />
+            ))
+          ) : filteredUsers?.map((u) => (
+            <div key={u._id} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-primary-600/10 flex items-center justify-center text-primary-500 font-bold text-lg border border-primary-500/20">
+                  {u.name.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-base text-white tracking-tight truncate">{u.name}</p>
+                  <p className="text-xs text-slate-500 font-medium truncate">{u.email}</p>
+                </div>
+                <button
+                  onClick={() => handleDelete(u._id)}
+                  className="p-2.5 text-slate-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+
+              <div className="space-y-4 pt-4 border-t border-white/5">
+                <div className="flex flex-col gap-2">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Protocol Level</span>
+                  <div className={`relative ${openDropdownId === u._id ? 'z-[100]' : 'z-10'}`}>
+                    <RoleSelector
+                      currentRole={u.role}
+                      onRoleChange={(newRole) => handleRoleChange(u._id, newRole)}
+                      isOpen={openDropdownId === u._id}
+                      setIsOpen={(isOpen) => setOpenDropdownId(isOpen ? u._id : null)}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Enrolled Date</span>
+                  <span className="text-xs font-bold text-slate-400">{new Date(u.createdAt).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="hidden lg:block bg-white/[0.02] border border-white/5 rounded-2xl shadow-2xl overflow-visible">
+          <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-white/[0.03] border-b border-white/10">
                 <th className="px-8 py-5 text-xs font-black uppercase tracking-widest text-slate-500">Unit Identification</th>
