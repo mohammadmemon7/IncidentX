@@ -98,12 +98,12 @@ const googleCallback = async (req, res) => {
         };
 
         const encodedUser = encodeURIComponent(JSON.stringify(userData));
-        const frontendUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : '';
+        const frontendUrl = process.env.CLIENT_URL || '';
         res.redirect(`${frontendUrl}/login?auth_success=true&user=${encodedUser}`);
 
     } catch (error) {
         console.error('Google callback error:', error);
-        const frontendUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : '';
+        const frontendUrl = process.env.CLIENT_URL || '';
         res.redirect(`${frontendUrl}/login?error=${encodeURIComponent(error.message)}`);
     }
 };
