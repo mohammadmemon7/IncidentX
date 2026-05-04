@@ -41,8 +41,9 @@ app.use('/api/status', statusRoutes);
 app.use('/api/monitors', monitorRoutes);
 
 
-app.get('/', (req, res) => {
-  res.send('Incident X API is running');
+const path = require('path');
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
 
 module.exports =  app ;
