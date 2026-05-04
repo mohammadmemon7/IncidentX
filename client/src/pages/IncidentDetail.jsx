@@ -77,7 +77,7 @@ const IncidentDetail = () => {
   const handleSuggestRootCause = async () => {
     setIsSuggesting(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/incidents/${id}/rootcause`, {}, {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || ''}/api/incidents/${id}/rootcause`.replace('/api/api', '/api'), {}, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setRootCauses(res.data.suggestions);

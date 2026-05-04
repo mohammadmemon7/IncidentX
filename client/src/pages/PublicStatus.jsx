@@ -128,7 +128,7 @@ const PublicStatus = () => {
   useEffect(() => {
     fetchStatus();
 
-    const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000');
+    const socket = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || window.location.origin);
     
     socket.on('incident:new', () => fetchStatus());
     socket.on('incident:listUpdate', () => fetchStatus());
