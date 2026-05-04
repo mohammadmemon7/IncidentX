@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(morgan('dev'));
+app.use(express.static('./public'));
 
 app.use(passport.initialize());
 
