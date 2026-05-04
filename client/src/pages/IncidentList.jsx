@@ -239,13 +239,13 @@ const IncidentList = () => {
 
       {/* Control Bar: Search & Filters */}
       <div className="flex flex-col gap-6 bg-slate-900/40 p-5 md:p-6 rounded-xl border border-white/5 shadow-xl">
-        <div className="flex flex-col lg:flex-row gap-4 md:gap-6 items-center justify-between">
-          <div className="relative w-full lg:w-[450px]">
+        <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between w-full overflow-hidden">
+          <div className="relative w-full lg:max-w-md">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
             <input
               type="text"
               placeholder="Search incident logs..."
-              className="w-full bg-white/[0.03] border border-white/10 text-white text-sm h-11 md:h-12 pl-14 pr-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all placeholder:text-slate-700"
+              className="w-full bg-white/[0.03] border border-white/10 text-white text-sm h-12 pl-14 pr-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all placeholder:text-slate-700"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

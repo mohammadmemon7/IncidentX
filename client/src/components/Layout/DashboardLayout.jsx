@@ -39,8 +39,8 @@ const DashboardLayout = () => {
 
       <Sidebar isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
       
-      <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-24 lg:pt-8 transition-all duration-300 relative z-10 w-full overflow-x-hidden">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-24 lg:pt-8 transition-all duration-300 relative z-10 w-full max-w-full overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full">
           <Outlet />
         </div>
       </main>

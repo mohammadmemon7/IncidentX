@@ -18,10 +18,11 @@
 }
 
 @layer base {
-  body {
-    @apply bg-[#020617] text-slate-300 antialiased font-sans;
+  html, body {
+    @apply bg-[#020617] text-slate-300 antialiased font-sans overflow-x-hidden w-full;
     background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
+    position: relative;
   }
   
   h1, h2, h3, h4, h5, h6 {
