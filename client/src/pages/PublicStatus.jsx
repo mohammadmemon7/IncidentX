@@ -154,41 +154,41 @@ const PublicStatus = () => {
       <SubscribeModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       {/* Premium Header */}
-      <nav className="h-24 border-b border-white/5 flex items-center justify-between px-10 bg-[#020617]/80 backdrop-blur-md sticky top-0 z-50">
-        <Link to="/" className="flex items-center gap-4 text-white font-bold text-2xl tracking-tighter italic">
-          <ShieldCheck className="text-primary-500" size={32} />
+      <nav className="h-20 md:h-24 border-b border-white/5 flex items-center justify-between px-6 md:px-10 bg-[#020617]/80 backdrop-blur-md sticky top-0 z-50">
+        <Link to="/" className="flex items-center gap-3 md:gap-4 text-white font-bold text-xl md:text-2xl tracking-tighter italic">
+          <ShieldCheck className="text-primary-500" size={24} className="md:w-8 md:h-8" />
           IncidentX
         </Link>
-        <div className="flex items-center gap-8">
-           <Link to="/docs" className="text-xs font-black text-slate-400 uppercase tracking-widest hover:text-white transition-colors">Documentation</Link>
+        <div className="flex items-center gap-4 md:gap-8">
+           <Link to="/docs" className="hidden sm:block text-xs font-black text-slate-400 uppercase tracking-widest hover:text-white transition-colors">Docs</Link>
            <button 
              onClick={() => setIsModalOpen(true)}
-             className="h-11 px-6 rounded-lg bg-primary-600 text-white text-xs font-black uppercase tracking-widest hover:bg-primary-500 transition-all shadow-lg shadow-primary-600/20 flex items-center gap-3"
+             className="h-10 md:h-11 px-4 md:px-6 rounded-lg bg-primary-600 text-white text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-primary-500 transition-all shadow-lg shadow-primary-600/20 flex items-center gap-2"
            >
-              <Bell size={18} /> Subscribe to Alerts
+              <Bell size={16} /> <span className="hidden xs:inline">Subscribe</span>
            </button>
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto px-8 pt-24 space-y-16">
+      <div className="max-w-6xl mx-auto px-6 md:px-8 pt-12 md:pt-24 space-y-12 md:space-y-16">
         {/* Global Status Banner */}
-        <div className={`p-10 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden ${
+        <div className={`p-8 md:p-10 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-8 md:gap-10 relative overflow-hidden ${
           overallStatus === 'operational' ? 'bg-green-500/10 border-green-500/20' : 
           overallStatus === 'major-outage' ? 'bg-red-500/10 border-red-500/20' : 'bg-orange-500/10 border-orange-500/20'
         }`}>
-           <div className="flex items-center gap-8 relative z-10">
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.3)] ${
+           <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8 relative z-10 text-center md:text-left">
+              <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 ${
                 overallStatus === 'operational' ? 'bg-green-500/20 text-green-500' :
                 overallStatus === 'major-outage' ? 'bg-red-500/20 text-red-500' : 'bg-orange-500/20 text-orange-500'
               }`}>
-                 {overallStatus === 'operational' ? <CheckCircle2 size={40} /> : <AlertTriangle size={40} />}
+                 {overallStatus === 'operational' ? <CheckCircle2 size={32} className="md:w-10 md:h-10" /> : <AlertTriangle size={32} className="md:w-10 md:h-10" />}
               </div>
-              <div className="space-y-2">
-                 <h1 className="text-4xl font-bold text-white tracking-tight">
+              <div className="space-y-1 md:space-y-2">
+                 <h1 className="text-2xl md:text-4xl font-bold text-white tracking-tight">
                    {overallStatus === 'operational' ? 'All Systems Operational' : 
                     overallStatus === 'major-outage' ? 'Critical System Failure' : 'Active Service Degradation'}
                  </h1>
-                 <p className={`text-base font-medium ${
+                 <p className={`text-sm md:text-base font-medium ${
                    overallStatus === 'operational' ? 'text-green-500/70' :
                    overallStatus === 'major-outage' ? 'text-red-500/70' : 'text-orange-500/70'
                  }`}>
@@ -196,11 +196,11 @@ const PublicStatus = () => {
                  </p>
               </div>
            </div>
-           <div className="text-right hidden md:block relative z-10">
-              <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Network Uptime</p>
-              <p className="text-3xl font-bold text-white">99.98%</p>
+           <div className="text-center md:text-right relative z-10 border-t md:border-t-0 border-white/5 pt-4 md:pt-0 w-full md:w-auto">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 md:mb-2">Network Uptime</p>
+              <p className="text-2xl md:text-3xl font-bold text-white">99.98%</p>
            </div>
-           <div className={`absolute top-0 right-0 w-80 h-80 rounded-full blur-[100px] -mr-40 -mt-40 ${
+           <div className={`absolute top-0 right-0 w-64 md:w-80 h-64 md:h-80 rounded-full blur-[100px] -mr-32 md:-mr-40 -mt-32 md:-mt-40 ${
              overallStatus === 'operational' ? 'bg-green-500/5' :
              overallStatus === 'major-outage' ? 'bg-red-500/5' : 'bg-orange-500/5'
            }`} />
@@ -300,7 +300,7 @@ const PublicStatus = () => {
            <div className="flex items-center justify-center gap-10 text-xs font-black text-slate-500 uppercase tracking-widest">
               <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
               <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-              <Link to="/status" className="hover:text-white transition-colors">Security Protocol</Link>
+              <Link to="/docs#security-protocol" className="hover:text-white transition-colors">Security Protocol</Link>
            </div>
            <p className="text-xs text-slate-700 font-bold tracking-[0.3em] uppercase">
               Operational Transparency Powered by <span className="text-primary-500 italic">IncidentX</span>

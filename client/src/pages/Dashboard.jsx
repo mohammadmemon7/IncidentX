@@ -84,29 +84,29 @@ const Dashboard = () => {
   return (
     <div className="p-8 space-y-12 max-w-7xl mx-auto pb-24">
       {/* Header: Human-Scale Welcome */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
         <div className="space-y-3">
           <div className="flex items-center gap-3 text-xs font-black text-primary-500 uppercase tracking-[0.2em]">
              <Activity size={16} className="animate-pulse" />
              Operational Status: Online
           </div>
-          <h1 className="text-5xl font-bold text-white tracking-tight leading-tight">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight">
             Welcome back, {user?.name.split(' ')[0]}.
           </h1>
-          <p className="text-lg text-slate-400 font-medium">Monitoring your infrastructure resilience in real-time.</p>
+          <p className="text-base md:text-lg text-slate-400 font-medium">Monitoring your infrastructure resilience in real-time.</p>
         </div>
-        <div className="flex items-center gap-4">
-           <Link to="/admin/ingest" className="h-12 px-6 rounded-lg bg-white/5 border border-white/5 text-white text-sm font-bold hover:bg-white/10 transition-all flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3 md:gap-4">
+           <Link to="/admin/ingest" className="flex-1 md:flex-none h-11 md:h-12 px-4 md:px-6 rounded-lg bg-white/5 border border-white/5 text-white text-xs md:text-sm font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-2">
               <Clock size={16} className="text-slate-400" /> System Logs
            </Link>
-           <Link to="/incidents" className="h-12 px-6 rounded-lg bg-primary-600 text-white text-sm font-bold hover:bg-primary-500 transition-all shadow-lg shadow-primary-600/20 flex items-center gap-2">
+           <Link to="/incidents" className="flex-1 md:flex-none h-11 md:h-12 px-4 md:px-6 rounded-lg bg-primary-600 text-white text-xs md:text-sm font-bold hover:bg-primary-500 transition-all shadow-lg shadow-primary-600/20 flex items-center justify-center gap-2">
               <Zap size={18} /> New Incident
            </Link>
         </div>
       </div>
 
       {/* High-Impact Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <StatCard title="Active Incidents" value={active.length} change="+2" icon={ShieldAlert} color="bg-red-500" />
         <StatCard title="Avg Resolution" value="24m" change="-12%" icon={Clock} color="bg-primary-500" />
         <StatCard title="Uptime (24h)" value="99.98%" change="+0.02%" icon={Activity} color="bg-green-500" />

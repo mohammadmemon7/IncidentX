@@ -16,12 +16,14 @@ import ForgotPassword from './pages/ForgotPassword';
 import MonitorList from './pages/MonitorList';
 import { useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   const { user } = useSelector((state) => state.auth);
 
   return (
     <Router>
+      <ScrollToTop />
       <Toaster 
         position="top-center" 
         reverseOrder={false} 

@@ -41,8 +41,14 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-[#020617] border-b border-white/5 p-6 flex flex-col gap-6 animate-in slide-in-from-top duration-300">
           <hr className="border-white/5" />
-          <Link to="/login" className="text-lg font-bold text-white" onClick={() => setIsOpen(false)}>Sign In</Link>
-          <Link to="/signup" className="btn btn-primary w-full py-4 text-lg" onClick={() => setIsOpen(false)}>Get Started</Link>
+          {user ? (
+            <Link to="/dashboard" className="btn btn-primary w-full py-4 text-lg" onClick={() => setIsOpen(false)}>Dashboard</Link>
+          ) : (
+            <>
+              <Link to="/login" className="text-lg font-bold text-white" onClick={() => setIsOpen(false)}>Sign In</Link>
+              <Link to="/signup" className="btn btn-primary w-full py-4 text-lg" onClick={() => setIsOpen(false)}>Get Started</Link>
+            </>
+          )}
         </div>
       )}
     </nav>

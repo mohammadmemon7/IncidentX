@@ -44,19 +44,19 @@ const Landing = () => {
             </div>
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight max-w-4xl">
-              Professional Incident Response <br />
+              Professional Incident Response <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-white to-slate-500">for Modern Infrastructure.</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl font-medium">
+            <p className="text-base md:text-xl text-slate-500 leading-relaxed max-w-2xl font-medium">
               Detect, coordinate, and resolve incidents with surgical precision. The unified command center for high-performance engineering teams.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
-              <Link to="/signup" className="h-12 px-10 rounded-lg bg-primary-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-primary-500 transition-all active:scale-95 shadow-lg shadow-primary-600/20">
+            <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
+              <Link to="/signup" className="w-full sm:w-auto h-12 px-10 rounded-lg bg-primary-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-primary-500 transition-all active:scale-95 shadow-lg shadow-primary-600/20">
                 Deploy System <ArrowRight size={18} />
               </Link>
-              <Link to="/login" className="h-12 px-10 rounded-lg border border-white/10 text-white font-bold flex items-center justify-center gap-2 hover:bg-white/5 transition-all">
+              <Link to="/login" className="w-full sm:w-auto h-12 px-10 rounded-lg border border-white/10 text-white font-bold flex items-center justify-center gap-2 hover:bg-white/5 transition-all">
                 Enter Gateway
               </Link>
             </div>
@@ -133,7 +133,7 @@ const Landing = () => {
                     {[...Array(6)].map((_, i) => <div key={i} className="h-6 bg-white/20 rounded"></div>)}
                  </div>
                  <div className="pt-6 border-t border-white/5 flex justify-center">
-                    <Link to="/signup" className="text-xs font-bold text-primary-400 hover:text-white transition-colors flex items-center gap-2">
+                    <Link to="/docs#architecture" className="text-xs font-bold text-primary-400 hover:text-white transition-colors flex items-center gap-2">
                        Architecture Overview <ChevronRight size={14} />
                     </Link>
                  </div>
