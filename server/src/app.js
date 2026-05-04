@@ -36,7 +36,7 @@ passport.use(new GoogleStrategy({
 app.get('/auth/google/callback', passport.authenticate('google', {
   session: false,
   failureRedirect: ['http://localhost:5173/login',
-    "https:https://incidentx-g0o7.onrender.com"
+    "https://incidentx-g0o7.onrender.com"
   ],
 }), require('./controllers/authController').googleCallback);
 
