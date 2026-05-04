@@ -300,7 +300,11 @@ const IncidentDetail = () => {
               </div>
               <div className="space-y-1">
                 <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">Intelligence Briefing</h2>
-                <p className="text-slate-400 font-medium uppercase tracking-[0.2em] text-xs">Automated Incident Postmortem Analysis</p>
+                <div className="flex items-center gap-4">
+                  <p className="text-slate-400 font-medium uppercase tracking-[0.2em] text-[10px]">Automated Incident Postmortem Analysis</p>
+                  <div className="w-1 h-1 rounded-full bg-slate-700" />
+                  <p className="text-purple-400 font-black uppercase tracking-[0.2em] text-[10px]">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                </div>
               </div>
             </div>
 
