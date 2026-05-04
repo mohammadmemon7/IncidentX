@@ -285,37 +285,37 @@ const IncidentDetail = () => {
 
       {/* Postmortem Modal Overhaul */}
       {showPostmortem && postmortem && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-12 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="glass bg-slate-900 border border-white/10 rounded-[3rem] w-full max-w-5xl max-h-[90vh] overflow-y-auto shadow-[0_0_100px_rgba(168,85,247,0.15)] relative p-10 md:p-16">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 bg-slate-950/90 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="glass bg-slate-900 border border-white/10 rounded-2xl md:rounded-[3rem] w-full max-w-5xl max-h-[95vh] overflow-y-auto shadow-[0_0_100px_rgba(168,85,247,0.15)] relative p-6 md:p-16">
             <button 
               onClick={() => setShowPostmortem(false)} 
-              className="absolute top-10 right-10 w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
+              className="absolute top-6 right-6 md:top-10 md:right-10 w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors z-10"
             >
-               <ChevronLeft size={24} className="rotate-90" />
+               <ChevronLeft size={20} className="rotate-90 md:w-6 md:h-6" />
             </button>
             
-            <div className="flex items-center gap-6 mb-12">
-              <div className="w-20 h-20 rounded-[2rem] bg-purple-500/10 flex items-center justify-center text-purple-500 border border-purple-500/20">
-                <Bot size={48} />
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-8 md:mb-12">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[2rem] bg-purple-500/10 flex items-center justify-center text-purple-500 border border-purple-500/20 shrink-0">
+                <Bot size={32} className="md:w-12 md:h-12" />
               </div>
               <div className="space-y-1">
-                <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">Intelligence Briefing</h2>
-                <div className="flex items-center gap-4">
-                  <p className="text-slate-400 font-medium uppercase tracking-[0.2em] text-[10px]">Automated Incident Postmortem Analysis</p>
-                  <div className="w-1 h-1 rounded-full bg-slate-700" />
-                  <p className="text-purple-400 font-black uppercase tracking-[0.2em] text-[10px]">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none">Intelligence Briefing</h2>
+                <div className="flex flex-wrap items-center gap-2 md:gap-4">
+                  <p className="text-slate-400 font-medium uppercase tracking-[0.2em] text-[9px] md:text-[10px]">Automated Postmortem</p>
+                  <div className="hidden xs:block w-1 h-1 rounded-full bg-slate-700" />
+                  <p className="text-purple-400 font-black uppercase tracking-[0.2em] text-[9px] md:text-[10px]">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                 </div>
               </div>
             </div>
 
-            <div className="prose prose-invert max-w-none prose-headings:text-white prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-p:text-slate-400 prose-p:leading-relaxed prose-strong:text-purple-400 prose-code:text-primary-400 prose-code:bg-white/5 prose-code:px-2 prose-code:py-0.5 prose-code:rounded">
+            <div className="prose prose-invert max-w-none prose-sm md:prose-base prose-headings:text-white prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight prose-p:text-slate-400 prose-p:leading-relaxed prose-strong:text-purple-400 prose-code:text-primary-400 prose-code:bg-white/5 prose-code:px-2 prose-code:py-0.5 prose-code:rounded">
               <ReactMarkdown>{postmortem.editedContent || postmortem.content}</ReactMarkdown>
             </div>
             
-            <div className="mt-16 pt-10 border-t border-white/5 flex justify-end">
+            <div className="mt-12 md:mt-16 pt-8 md:pt-10 border-t border-white/5 flex justify-end">
               <button 
                 onClick={() => setShowPostmortem(false)} 
-                className="h-14 px-10 rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-all"
+                className="w-full md:w-auto h-12 md:h-14 px-10 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] md:text-xs hover:bg-white/10 transition-all"
               >
                 Terminate Review
               </button>
