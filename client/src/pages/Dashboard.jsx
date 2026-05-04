@@ -13,6 +13,7 @@ import {
   MoreVertical
 } from 'lucide-react';
 import { useGetIncidentsQuery } from '../store/slices/incidentsApiSlice';
+import { useGetMonitorsQuery } from '../store/slices/monitorsApiSlice';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -76,6 +77,7 @@ const ActivityItem = ({ incident }) => (
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const { data: incidents, isLoading } = useGetIncidentsQuery();
+  const { data: monitors } = useGetMonitorsQuery();
 
   const active = incidents?.filter(i => i.status !== 'resolved') || [];
 
@@ -169,20 +171,29 @@ const Dashboard = () => {
            </div>
 
            <div className="space-y-6">
-              <h3 className="px-2 text-xs font-black text-slate-500 uppercase tracking-widest">Infrastructure Status</h3>
+              <div className="flex items-center justify-between px-2">
+                <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest">Monitored Services</h3>
+                <Link to="/monitors" className="text-[10px] font-bold text-primary-500 uppercase hover:underline">Manage</Link>
+              </div>
               <div className="space-y-4">
-                 {[
-                   { label: "Network Load", value: "Normal", color: "text-green-500" },
-                   { label: "Global Error Rate", value: "0.04%", color: "text-primary-400" },
-                   { label: "Pending Postmortems", value: "2", color: "text-orange-400" }
-                 ].map((item, i) => (
+                 {monitors?.slice(0, 3).map((m, i) => (
                    <div key={i} className="flex items-center justify-between p-5 rounded-lg bg-white/[0.02] border border-white/5">
-                      <span className="text-sm font-bold text-slate-400">{item.label}</span>
-                      <span className={`text-sm font-black uppercase tracking-widest ${item.color}`}>{item.value}</span>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${m.status === 'up' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                        <span className="text-sm font-bold text-slate-400">{m.name}</span>
+                      </div>
+                      <span className={`text-[10px] font-black uppercase tracking-widest ${m.status === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                        {m.status}
+                      </span>
                    </div>
                  ))}
+                 {(!monitors || monitors.length === 0) && (
+                   <p className="text-xs text-slate-600 px-2 italic">No services currently monitored.</p>
+                 )}
               </div>
            </div>
+
+           <div className="space-y-6">
 
             <div className="p-6 rounded-lg border border-dashed border-white/10 bg-white/[0.01] text-center">
               <p className="text-xs font-bold text-slate-500 mb-3">Operational assistance required?</p>
@@ -194,6 +205,7 @@ const Dashboard = () => {
               </button>
             </div>
         </div>
+      </div>
       </div>
     </div>
   );

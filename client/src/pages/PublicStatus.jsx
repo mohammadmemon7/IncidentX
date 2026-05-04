@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ShieldCheck, Activity, CheckCircle2, AlertTriangle, Clock, Globe, Bell, ChevronRight, X, Mail, ShieldAlert, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import axios from 'axios';
+import { io } from 'socket.io-client';
+import { formatDistanceToNow } from 'date-fns';
 
 const ServiceStatus = ({ name, status, uptime }) => (
   <div className="p-8 rounded-xl bg-white/[0.02] border border-white/5 space-y-6">
@@ -108,6 +111,43 @@ const SubscribeModal = ({ isOpen, onClose }) => {
 
 const PublicStatus = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [statusData, setStatusData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchStatus = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL || ''}/api/status/public`.replace('/api/api', '/api'));
+      setStatusData(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to fetch status:', error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStatus();
+
+    const socket = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || window.location.origin);
+    
+    socket.on('incident:new', () => fetchStatus());
+    socket.on('incident:listUpdate', () => fetchStatus());
+    socket.on('monitor:status', () => fetchStatus());
+
+    return () => socket.disconnect();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#020617] flex items-center justify-center">
+        <Loader2 className="text-primary-500 animate-spin" size={48} />
+      </div>
+    );
+  }
+
+  const overallStatus = statusData?.overallStatus || 'operational';
+  const activeIncidents = statusData?.activeIncidents || [];
+  const resolvedHistory = statusData?.resolvedHistory || [];
 
   return (
     <div className="min-h-screen bg-[#020617] text-slate-300 font-sans pb-24 selection:bg-primary-500/30">
@@ -132,22 +172,66 @@ const PublicStatus = () => {
 
       <div className="max-w-6xl mx-auto px-8 pt-24 space-y-16">
         {/* Global Status Banner */}
-        <div className="p-10 rounded-2xl bg-green-500/10 border border-green-500/20 flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden">
+        <div className={`p-10 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden ${
+          overallStatus === 'operational' ? 'bg-green-500/10 border-green-500/20' : 
+          overallStatus === 'major-outage' ? 'bg-red-500/10 border-red-500/20' : 'bg-orange-500/10 border-orange-500/20'
+        }`}>
            <div className="flex items-center gap-8 relative z-10">
-              <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 shadow-[0_0_40px_rgba(34,197,94,0.3)]">
-                 <CheckCircle2 size={40} />
+              <div className={`w-20 h-20 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.3)] ${
+                overallStatus === 'operational' ? 'bg-green-500/20 text-green-500' :
+                overallStatus === 'major-outage' ? 'bg-red-500/20 text-red-500' : 'bg-orange-500/20 text-orange-500'
+              }`}>
+                 {overallStatus === 'operational' ? <CheckCircle2 size={40} /> : <AlertTriangle size={40} />}
               </div>
               <div className="space-y-2">
-                 <h1 className="text-4xl font-bold text-white tracking-tight">All Systems Operational</h1>
-                 <p className="text-base text-green-500/70 font-medium">Monitoring 14 core services in real-time — Last check 1m ago</p>
+                 <h1 className="text-4xl font-bold text-white tracking-tight">
+                   {overallStatus === 'operational' ? 'All Systems Operational' : 
+                    overallStatus === 'major-outage' ? 'Critical System Failure' : 'Active Service Degradation'}
+                 </h1>
+                 <p className={`text-base font-medium ${
+                   overallStatus === 'operational' ? 'text-green-500/70' :
+                   overallStatus === 'major-outage' ? 'text-red-500/70' : 'text-orange-500/70'
+                 }`}>
+                   Monitoring infrastructure core services in real-time — {activeIncidents.length} active events
+                 </p>
               </div>
            </div>
            <div className="text-right hidden md:block relative z-10">
               <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Network Uptime</p>
               <p className="text-3xl font-bold text-white">99.98%</p>
            </div>
-           <div className="absolute top-0 right-0 w-80 h-80 bg-green-500/5 rounded-full blur-[100px] -mr-40 -mt-40" />
+           <div className={`absolute top-0 right-0 w-80 h-80 rounded-full blur-[100px] -mr-40 -mt-40 ${
+             overallStatus === 'operational' ? 'bg-green-500/5' :
+             overallStatus === 'major-outage' ? 'bg-red-500/5' : 'bg-orange-500/5'
+           }`} />
         </div>
+
+        {/* Active Incidents Section if any */}
+        {activeIncidents.length > 0 && (
+          <div className="space-y-8 animate-in slide-in-from-top-4 duration-500">
+             <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-3 px-2">
+                Critical Active Events <ShieldAlert size={20} className="text-red-500" />
+             </h2>
+             <div className="space-y-4">
+                {activeIncidents.map(incident => (
+                  <div key={incident._id} className="p-8 rounded-xl bg-red-500/[0.03] border border-red-500/10 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-bold text-white">{incident.title}</h3>
+                      <span className="text-xs font-black text-red-500 uppercase tracking-widest">{incident.severity}</span>
+                    </div>
+                    <p className="text-sm text-slate-400 leading-relaxed">{incident.description}</p>
+                    <div className="flex items-center gap-4 pt-2">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                        <Clock size={14} /> Updated {formatDistanceToNow(new Date(incident.updatedAt))} ago
+                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-800" />
+                      <span className="text-xs font-bold text-primary-500 uppercase tracking-widest">{incident.status}</span>
+                    </div>
+                  </div>
+                ))}
+             </div>
+          </div>
+        )}
 
         {/* Services Grid */}
         <div className="space-y-8">
@@ -158,12 +242,18 @@ const PublicStatus = () => {
               <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Live Updates Available</span>
            </div>
            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <ServiceStatus name="Global API Gateway" status="operational" uptime="99.99" />
-              <ServiceStatus name="Authentication Engine" status="operational" uptime="100.00" />
-              <ServiceStatus name="Distributed DB (US-EAST)" status="operational" uptime="99.95" />
-              <ServiceStatus name="Global Edge CDN" status="operational" uptime="99.99" />
-              <ServiceStatus name="Core Incident Logic" status="operational" uptime="100.00" />
-              <ServiceStatus name="Public Dashboard" status="operational" uptime="99.98" />
+              {statusData?.monitors?.length > 0 ? (
+                statusData.monitors.map((m, i) => (
+                  <ServiceStatus key={i} name={m.name} status={m.status === 'up' ? 'operational' : 'outage'} uptime="99.9" />
+                ))
+              ) : (
+                <>
+                  <ServiceStatus name="Global API Gateway" status={overallStatus === 'major-outage' ? 'degraded' : 'operational'} uptime="99.99" />
+                  <ServiceStatus name="Authentication Engine" status="operational" uptime="100.00" />
+                  <ServiceStatus name="Distributed DB" status="operational" uptime="99.95" />
+                  <ServiceStatus name="Public Dashboard" status="operational" uptime="99.98" />
+                </>
+              )}
            </div>
         </div>
 
@@ -174,37 +264,34 @@ const PublicStatus = () => {
            </h2>
            
            <div className="space-y-16">
-              {[
-                { date: "May 2, 2026", events: [] },
-                { date: "May 1, 2026", events: [
-                  { title: "Minor Dashboard Latency", status: "Resolved", time: "14:20 - 15:10 UTC", desc: "We observed elevated latency on the dashboard portal. The issue was traced to a misconfigured edge node in the US-WEST region and has been resolved." }
-                ] },
-                { date: "April 30, 2026", events: [] }
-              ].map((day, i) => (
-                <div key={i} className="relative pl-12 border-l border-white/10">
-                   <div className="absolute left-0 top-0 -translate-x-1/2 w-4 h-4 rounded-full bg-slate-800 border-2 border-primary-600 shadow-[0_0_10px_rgba(14,165,233,0.5)]" />
-                   <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-8">{day.date}</h3>
-                   
-                   {day.events.length > 0 ? (
-                     <div className="space-y-8">
-                        {day.events.map((event, j) => (
-                          <div key={j} className="p-8 rounded-xl bg-white/[0.02] border border-white/5 space-y-4">
-                             <div className="flex items-center justify-between">
-                                <h4 className="text-base font-bold text-white">{event.title}</h4>
-                                <span className="text-xs font-black text-green-500 uppercase tracking-widest">{event.status}</span>
-                             </div>
-                             <p className="text-sm text-slate-400 leading-relaxed max-w-3xl">{event.desc}</p>
-                             <div className="text-xs font-bold text-slate-500 uppercase tracking-widest pt-4 flex items-center gap-3">
-                                <Clock size={14} /> {event.time}
-                             </div>
-                          </div>
-                        ))}
+              {resolvedHistory.length > 0 ? (
+                <div className="space-y-12">
+                   {resolvedHistory.map((incident) => (
+                     <div key={incident._id} className="relative pl-12 border-l border-white/10">
+                        <div className="absolute left-0 top-0 -translate-x-1/2 w-4 h-4 rounded-full bg-slate-800 border-2 border-primary-600 shadow-[0_0_10px_rgba(14,165,233,0.5)]" />
+                        <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">
+                          {new Date(incident.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        </h3>
+                        
+                        <div className="p-8 rounded-xl bg-white/[0.02] border border-white/5 space-y-4">
+                           <div className="flex items-center justify-between">
+                              <h4 className="text-base font-bold text-white">{incident.title}</h4>
+                              <span className="text-xs font-black text-green-500 uppercase tracking-widest">Resolved</span>
+                           </div>
+                           <p className="text-sm text-slate-400 leading-relaxed max-w-3xl">{incident.description}</p>
+                           <div className="text-xs font-bold text-slate-500 uppercase tracking-widest pt-4 flex items-center gap-3">
+                              <ShieldCheck size={14} className="text-green-500" /> Resolved {formatDistanceToNow(new Date(incident.resolvedAt))} ago
+                           </div>
+                        </div>
                      </div>
-                   ) : (
-                     <p className="text-sm text-slate-600 font-bold uppercase tracking-widest">No infrastructure events reported.</p>
-                   )}
+                   ))}
                 </div>
-              ))}
+              ) : (
+                <div className="relative pl-12 border-l border-white/10">
+                   <div className="absolute left-0 top-0 -translate-x-1/2 w-4 h-4 rounded-full bg-slate-800 border-2 border-slate-700" />
+                   <p className="text-sm text-slate-600 font-bold uppercase tracking-widest">No recent infrastructure events reported.</p>
+                </div>
+              )}
            </div>
         </div>
 

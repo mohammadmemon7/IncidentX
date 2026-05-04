@@ -17,14 +17,11 @@
   --color-primary-950: #082f49;
 }
 
-@utility bg-grid {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
 @layer base {
   body {
-    @apply bg-[#020617] text-slate-300 antialiased font-sans bg-grid;
+    @apply bg-[#020617] text-slate-300 antialiased font-sans;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
   
   h1, h2, h3, h4, h5, h6 {

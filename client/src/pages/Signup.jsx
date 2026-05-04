@@ -17,7 +17,33 @@ const Signup = () => {
   const [register, { isLoading }] = useRegisterMutation();
   const { user } = useSelector((state) => state.auth);
 
-  useEffect(() => { if (user) navigate('/dashboard'); }, [navigate, user]);
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authSuccess = urlParams.get('auth_success');
+    const userData = urlParams.get('user');
+    const error = urlParams.get('error');
+
+    if (authSuccess && userData) {
+      try {
+        const user = JSON.parse(decodeURIComponent(userData));
+        dispatch(setCredentials(user));
+        navigate('/dashboard');
+      } catch (err) {
+        toast.error('Failed to parse user data');
+      }
+    }
+
+    if (error) {
+      toast.error(error);
+    }
+
+    if (authSuccess || error) {
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+
+    if (user) navigate('/dashboard');
+  }, [navigate, user, dispatch]);
 
   const validatePassword = (pass) => {
     const minLength = pass.length >= 8;
@@ -188,7 +214,7 @@ const Signup = () => {
           <div className="space-y-6 pt-2">
             <div className="grid grid-cols-1 gap-3">
                <button 
-                  onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`}
+                  onClick={() => window.location.href = `${import.meta.env.VITE_API_URL || ''}/api/auth/google`.replace('/api/api', '/api')}
                   className="flex items-center justify-center gap-3 h-12 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/10 transition-all text-sm font-bold text-white tracking-tight"
                >
                   <svg width="18" height="18" viewBox="0 0 18 18">

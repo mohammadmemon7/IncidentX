@@ -10,7 +10,7 @@ const useSocket = (incidentId = null) => {
   const { user: currentUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:10000', {
+    const socket = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || window.location.origin, {
       withCredentials: true,
     });
 
@@ -49,6 +49,10 @@ const useSocket = (incidentId = null) => {
         toast(`Incident status changed to ${status}`, { icon: '🔄' });
       }
     });
+
+    socket.on('incident:listUpdate', () => {
+      dispatch(apiSlice.util.invalidateTags(['Incident']));
+    });
     
     socket.on('user:new', (newUser) => {
       dispatch(apiSlice.util.invalidateTags(['User']));
@@ -68,6 +72,15 @@ const useSocket = (incidentId = null) => {
       if (currentUser?._id === userId) {
         dispatch(updateRole(role));
         toast.success(`Your access level has been updated to: ${role}`, { icon: '🔐' });
+      }
+    });
+
+    socket.on('monitor:status', (monitor) => {
+      dispatch(apiSlice.util.invalidateTags(['Monitor']));
+      if (monitor.status === 'down') {
+        toast.error(`MONITOR DOWN: ${monitor.name} (${monitor.url})`, { icon: '📉' });
+      } else {
+        toast.success(`Monitor Up: ${monitor.name}`, { icon: '📈' });
       }
     });
 

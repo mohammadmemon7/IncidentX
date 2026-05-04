@@ -39,7 +39,8 @@ const createIncident = async (req, res) => {
       responders: [{ user: req.user._id }]
     });
 
-    getIO().to('admin').emit('incident:new', incident);
+    getIO().emit('incident:new', incident);
+
 
     res.status(201).json(incident);
   } catch (error) {
@@ -94,6 +95,8 @@ const addIncidentUpdate = async (req, res) => {
         incidentId: incident._id,
         status: req.body.status
       });
+      // Also broadcast to everyone for the dashboard and status page
+      io.emit('incident:listUpdate', { incidentId: incident._id, status: req.body.status });
     }
 
     res.status(201).json(incident);
@@ -123,6 +126,7 @@ const resolveIncident = async (req, res) => {
     getIO().to(`incident:${incident._id}`).emit('incident:resolve', {
       incidentId: incident._id
     }); 
+    getIO().emit('incident:listUpdate', { incidentId: incident._id, status: 'resolved' });
 
     res.json(incident);
   } catch (error) {

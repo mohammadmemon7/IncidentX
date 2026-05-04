@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const {config} = require('../config/config');
+const config = require('../config/config');
 const User = require('../models/User');
 const { getIO } = require('../sockets/server.socket');
 
@@ -67,8 +67,12 @@ const googleCallback = async (req, res) => {
     try {
         const { id, displayName, emails, photos } = req.user;
 
-        const email = emails[0].value;
-        const profilePic = photos[0].value;
+        const email = emails?.[0]?.value;
+        const profilePic = photos?.[0]?.value;
+
+        if (!email) {
+            throw new Error('Google account must have an email associated with it.');
+        }
 
         let user = await User.findOne({ email });
         
@@ -83,11 +87,7 @@ const googleCallback = async (req, res) => {
           try { getIO().to('admin').emit('user:new', user); } catch (e) {}
         }
 
-        const token = jwt.sign(
-            { id: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        );
+        const token = generateToken(user._id);
 
         const userData = {
           _id: user._id,
@@ -98,11 +98,13 @@ const googleCallback = async (req, res) => {
         };
 
         const encodedUser = encodeURIComponent(JSON.stringify(userData));
-        res.redirect(`http://localhost:5173/login?auth_success=true&user=${encodedUser}`);
+        const frontendUrl = process.env.CLIENT_URL || '';
+        res.redirect(`${frontendUrl}/login?auth_success=true&user=${encodedUser}`);
 
     } catch (error) {
         console.error('Google callback error:', error);
-        res.redirect(`http://localhost:5173/login?error=${encodeURIComponent(error.message)}`);
+        const frontendUrl = process.env.CLIENT_URL || '';
+        res.redirect(`${frontendUrl}/login?error=${encodeURIComponent(error.message)}`);
     }
 };
 module.exports = {
