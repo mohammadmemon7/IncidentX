@@ -116,7 +116,7 @@ const PublicStatus = () => {
 
   const fetchStatus = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/status/public`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL || ''}/api/status/public`.replace('/api/api', '/api'));
       setStatusData(response.data);
       setLoading(false);
     } catch (error) {
