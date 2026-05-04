@@ -249,7 +249,7 @@ const IngestLogs = () => {
             <ul className="space-y-5 text-sm text-slate-400 font-medium leading-relaxed">
               <li className="flex gap-4">
                  <span className="text-primary-500 font-black">01.</span>
-                 <span>Gemini 2.0 Flash intercepts operational logs in real-time.</span>
+                 <span>Groq (Llama 3.3) intercepts operational logs in real-time.</span>
               </li>
               <li className="flex gap-4">
                  <span className="text-primary-500 font-black">02.</span>
